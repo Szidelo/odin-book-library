@@ -26,6 +26,29 @@ function Book(title, author, pages, status, pagesRead) {
     };
 }
 
+function Library() {
+    this.queue = [];
+    this.inProgress = [];
+    this.finished = [];
+
+    this.addToBook = function (book) {
+        const { QUEUE, IN_PROGRESS, FINISHED } = STATUS;
+        switch (book.status) {
+            case QUEUE:
+                this.queue.push(book);
+                break;
+            case IN_PROGRESS:
+                this.inProgress.push(book);
+                break;
+            case FINISHED:
+                this.finished.push(book);
+                break;
+        }
+    };
+}
+
+const library = new Library();
+
 const theHobbit = new Book("The Hobbit", "J.R.R Tolkein", 256, STATUS.FINISHED);
 const theShining = new Book("The Shining", "Stephen King", 511, STATUS.QUEUE);
 
@@ -43,11 +66,15 @@ Book.prototype.updateProgress = function (value) {
     return this.pagesRead;
 };
 
-console.log(theHobbit.getBookLength());
-console.log(theShining.getBookLength());
-console.log(theShining.updateProgress(0));
-console.log(theHobbit.updateProgress(10));
+// console.log(theHobbit.getBookLength());
+// console.log(theShining.getBookLength());
+// console.log(theShining.updateProgress(0));
+// console.log(theHobbit.updateProgress(10));
 
-console.log(Object.getPrototypeOf(theHobbit));
+// console.log(Object.getPrototypeOf(theHobbit));
 
-console.log(theHobbit.valueOf());
+// console.log(theHobbit.valueOf());
+
+library.addToBook(theHobbit);
+
+console.log(library);
