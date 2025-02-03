@@ -38,7 +38,7 @@ header {
 	background-color: var(--white-smoke);
 }
 
-.header-container {
+.header-container, .container {
 	width: 90%;
 	max-width: 1440px;
 	margin: 0 auto;
@@ -120,10 +120,18 @@ button {
 	cursor: pointer;
 }
 
+.options {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 #add-book {
 	background-color: var(--moonstone-dark);
 	border: 1px solid transparent;
 	color: white;
+	margin: 0 auto;
 	&:hover {
 		background-color: var(--moonstone);
 	}
@@ -132,18 +140,26 @@ button {
 	}
 }
 
+.row-title {
+	font-family: var(--text-headers);
+	font-size: 1.5rem;
+}
 
+.list {
+	display: flex;
+	gap: 2rem;
+}
 
 .card-xl {
-	width: 35rem;
-	height: 25rem;
+	width: 30rem;
+	height: 20rem;
 	padding: 0.75rem;
 	display: flex;
 	gap: 1rem;
 	background-color: var(--white);
 	box-shadow: 0 4px 6px 2px var(--shadow);
 	border-radius: 0.25rem;
-	margin-left: 3rem;
+	margin-top: 3rem;
 }
 
 .card-xl .card-xl__book-cover {
@@ -184,6 +200,8 @@ button {
 .card-xl__info .info-progress {
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
+	height: 50%;
 	gap: 0.75rem;
 }
 
