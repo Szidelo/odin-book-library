@@ -13,10 +13,12 @@
 	--black: #000000ff;
 	--pumpkin: #f47934ff;
 	--moonstone: #13a9c4ff;
+	--moonstone-dark: rgb(0, 126, 148);
 	--white-smoke: #f6f5f3ff;
 	--rusty-red: #cc2f44ff;
 	--dark-grey: rgb(77, 77, 77);
-	--shadow: rgba(0, 0, 0, 0.3);
+	--shadow: rgba(0, 0, 0, 0.2);
+	--white: #fff;
 
 	--text-headers: "Playfair Display", serif;
 	--text-para: "Rubik", serif;
@@ -28,6 +30,8 @@ main {
 	display: flex;
 	flex-direction: column;
 	gap: 2rem;
+	background-color: var(--white-smoke);
+
 }
 
 header {
@@ -86,18 +90,115 @@ header {
 
 .header-bottom {
 	display: flex;
-	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
 	gap: 0.25rem;
 	padding: 2rem 0;
 }
 
-.header-bottom h1 {
+.user-info {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+
+.user-info h1 {
 	font-family: var(--text-headers);
 	font-weight: 200;
 	font-size: 3rem;
 }
 
-.header-bottom p {
+.user-info p {
 	font-weight: 200;
 	color: var(--dark-grey);
+}
+
+button {
+	padding: 0.25rem 0.75rem;
+	text-transform: capitalize;
+	cursor: pointer;
+}
+
+#add-book {
+	background-color: var(--moonstone-dark);
+	border: 1px solid transparent;
+	color: white;
+	&:hover {
+		background-color: var(--moonstone);
+	}
+	&:active {
+		box-shadow: 0 2px 2px 1px var(--shadow);
+	}
+}
+
+
+
+.card-xl {
+	width: 35rem;
+	height: 25rem;
+	padding: 0.75rem;
+	display: flex;
+	gap: 1rem;
+	background-color: var(--white);
+	box-shadow: 0 4px 6px 2px var(--shadow);
+	border-radius: 0.25rem;
+	margin-left: 3rem;
+}
+
+.card-xl .card-xl__book-cover {
+	width: 50%;
+	height: 100%;
+	background-color: var(--rusty-red);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.card-xl .card-xl__info {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.card-xl__info .info-header {
+	height: 50%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.card-xl__info .info-header h3 {
+	font-family: var(--text-headers);
+	font-weight: 400;
+	font-size: 1.5rem;
+}
+
+.card-xl__info .info-header p {
+	font-weight: 200;
+	color: var(--dark-grey);
+	letter-spacing: 2px;
+}
+
+.card-xl__info .info-progress {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.card-xl__info .info-progress h3 {
+	font-family: var(--text-headers);
+	color: var(--dark-grey);
+	letter-spacing: 1px;
+}
+
+.card-xl__info .info-progress p, .card-xl__info .info-progress p span {
+	font-size: 0.75rem;
+	color: var(--dark-grey);
+	letter-spacing: 1px;
+}
+
+.card-xl__info .info-progress p span.pages-finished {
+	color: var(--black);
 }
