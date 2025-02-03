@@ -1,9 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 	transition: all 0.2s ease;
 	font-size: 16px;
+	font-family: "Rubik", serif;
 }
 
 :root {
@@ -12,8 +15,14 @@
 	--moonstone: #13a9c4ff;
 	--white-smoke: #f6f5f3ff;
 	--rusty-red: #cc2f44ff;
+	--dark-grey: rgb(77, 77, 77);
 	--shadow: rgba(0, 0, 0, 0.3);
+
+	--text-headers: "Playfair Display", serif;
+	--text-para: "Rubik", serif;
 }
+
+
 
 main {
 	display: flex;
@@ -25,10 +34,13 @@ header {
 	background-color: var(--white-smoke);
 }
 
-header .header-container {
+.header-container {
 	width: 90%;
 	max-width: 1440px;
 	margin: 0 auto;
+}
+
+.header-top {
 	padding: 2rem 0;
 	display: flex;
 	align-items: center;
@@ -39,7 +51,7 @@ header .header-container {
 	position: relative;
 }
 
-.header-container input {
+.search-container input {
 	padding: 0.5rem 0.25rem;
 	min-width: 20em;
 	background-color: var(--white-smoke);
@@ -48,7 +60,7 @@ header .header-container {
 	border-bottom: 1px solid var(--shadow);
 }
 
-.header-container #search-btn {
+.search-container #search-btn {
 	position: absolute;
 	top: 50%;
 	right: 0;
@@ -70,4 +82,22 @@ header .header-container {
 	width: 3rem;
 	height: 3rem;
 	border-radius: 50%;
+}
+
+.header-bottom {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	padding: 2rem 0;
+}
+
+.header-bottom h1 {
+	font-family: var(--text-headers);
+	font-weight: 200;
+	font-size: 3rem;
+}
+
+.header-bottom p {
+	font-weight: 200;
+	color: var(--dark-grey);
 }
