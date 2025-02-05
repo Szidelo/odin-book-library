@@ -13,11 +13,12 @@
 	--black: #000000ff;
 	--pumpkin: #f47934ff;
 	--moonstone: #13a9c4ff;
-	--moonstone-dark: rgb(0, 126, 148);
+	--moonstone-dark: #007e94;
 	--white-smoke: #f6f5f3ff;
 	--rusty-red: #cc2f44ff;
-	--dark-grey: rgb(77, 77, 77);
-	--shadow: rgba(0, 0, 0, 0.2);
+	--dark-grey: #4d4d4d;
+	--light-grey: #bbbbbb;
+	--shadow: #00000033;
 	--white: #fff;
 
 	--text-headers: "Playfair Display", serif;
@@ -160,6 +161,7 @@ button {
 	box-shadow: 0 4px 6px 2px var(--shadow);
 	border-radius: 0.25rem;
 	margin-top: 3rem;
+	flex-shrink: 0;
 }
 
 .card-xl .card-xl__book-cover {
@@ -174,6 +176,7 @@ button {
 
 .card-xl .card-xl__info {
 	height: 100%;
+	width: 50%;
 	display: flex;
 	flex-direction: column;
 }
@@ -203,6 +206,7 @@ button {
 	justify-content: center;
 	height: 50%;
 	gap: 0.75rem;
+	width: 100%;
 }
 
 .card-xl__info .info-progress h3 {
@@ -219,4 +223,17 @@ button {
 
 .card-xl__info .info-progress p span.pages-finished {
 	color: var(--black);
+}
+
+.card-xl__info .info-progress .progress-bar {
+	width: 75%;
+	height: 0.25rem;
+	border-radius: 0.25rem;
+	background-color: var(--light-grey);
+}
+
+.card-xl__info .info-progress .progress-bar .progress-bar__fill {
+	height: 100%;
+	border-radius: inherit;
+	background-color: var(--dark-grey);
 }
