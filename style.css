@@ -170,9 +170,10 @@ button {
 	flex-shrink: 0;
 }
 
-.card-xl.variation-col {
+.card-xl.variation-small {
 	flex-direction: column;
 	width: 15rem;
+	height: 25rem;
 }
 
 .card-xl .card-xl__book-cover {
@@ -185,11 +186,26 @@ button {
 	align-items: center;
 }
 
+.card-xl.variation-small .card-xl__book-cover {
+	width: 100%;
+	height: 75%;
+	background-color: var(--rusty-red);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
 .card-xl .card-xl__info {
 	height: 100%;
 	width: 50%;
 	display: flex;
 	flex-direction: column;
+}
+
+.card-xl.variation-small .card-xl__info  {
+	width: 100%;
+	height: 25%;
 }
 
 .card-xl__info .info-header {

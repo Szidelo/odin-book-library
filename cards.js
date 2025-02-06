@@ -4,7 +4,7 @@ export function createLargeCard(book, size) {
     card.classList.add("card-xl");
 
     if (size === "small") {
-        card.classList.add("variation-col");
+        card.classList.add("variation-small");
     }
 
     // book cover
