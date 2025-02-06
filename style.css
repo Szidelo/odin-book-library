@@ -151,6 +151,12 @@ button {
 	gap: 2rem;
 }
 
+.book-list {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+}
+
 .card-xl {
 	width: 30rem;
 	height: 20rem;
@@ -162,6 +168,11 @@ button {
 	border-radius: 0.25rem;
 	margin-top: 3rem;
 	flex-shrink: 0;
+}
+
+.card-xl.variation-col {
+	flex-direction: column;
+	width: 15rem;
 }
 
 .card-xl .card-xl__book-cover {
@@ -237,3 +248,4 @@ button {
 	border-radius: inherit;
 	background-color: var(--dark-grey);
 }
+

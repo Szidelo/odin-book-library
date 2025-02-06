@@ -1,6 +1,11 @@
-export function createLargeCard(book) {
+export function createLargeCard(book, size) {
     const card = document.createElement("div");
+
     card.classList.add("card-xl");
+
+    if (size === "small") {
+        card.classList.add("variation-col");
+    }
 
     // book cover
     const bookCover = document.createElement("div");
