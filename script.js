@@ -114,26 +114,6 @@ const displayFinishedBooks = (book) => {
 library.addToBook(theHobbit);
 library.addToBook(theShining);
 library.addToBook(atomicHabits);
-// console.log(library.getBooks());
-// console.log("-------------");
-// console.log(library.getBooks());
-// console.log(library.getCategoryOfBooks("development"));
-// console.log("-------------");
-// console.log(library.searchBook("ato"));
-// console.log(library.searchBook("king"));
-// console.log(library.searchBook("ho"));
-// console.log(theHobbit.updateProgress(200));
-// console.log(theHobbit);
-
-library.bookList.forEach((book) => {
-	if (book.status === STATUS.IN_PROGRESS) {
-		displayInProgressBooks(book);
-	} else if (book.status === STATUS.QUEUE) {
-		displayInQueueBooks(book);
-	} else {
-		displayFinishedBooks(book);
-	}
-});
 
 const addBookBtn = document.querySelector("#add-book");
 const formContainer = document.querySelector(".add-form-container");
@@ -191,5 +171,32 @@ addForm.addEventListener("submit", (e) => {
 	setTimeout(() => {
 		formContainer.style.display = "none";
 	}, 300);
+
 	console.log(library.getBooks());
+});
+
+const renderBooks = (books) => {
+	inProgressList.innerHTML = "";
+	inQueueList.innerHTML = "";
+	finishedList.innerHTML = "";
+
+	books.forEach((book) => {
+		if (book.status === STATUS.IN_PROGRESS) {
+			displayInProgressBooks(book);
+		} else if (book.status === STATUS.QUEUE) {
+			displayInQueueBooks(book);
+		} else {
+			displayFinishedBooks(book);
+		}
+	});
+};
+
+renderBooks(library.getBooks());
+
+const searchInput = document.querySelector("#search");
+
+searchInput.addEventListener("input", (e) => {
+	const keyword = e.target.value;
+	const filteredBooks = library.searchBook(keyword);
+	renderBooks(filteredBooks);
 });
