@@ -3,6 +3,8 @@ export function createLargeCard(book, size) {
 
     card.classList.add("card-xl");
 
+    card.dataset.id = book.id;
+
     if (size === "small") {
         card.classList.add("variation-small");
     }

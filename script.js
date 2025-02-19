@@ -8,13 +8,13 @@
 // the in progress books should have a different card for desktop
 
 import { createLargeCard } from "./cards.js";
-
+import { createBookModal } from "./bookModal.js";
 // declare a constant with three status values
 
 const STATUS = {
-	QUEUE: "queue",
-	IN_PROGRESS: "in progress",
-	FINISHED: "finished",
+    QUEUE: "queue",
+    IN_PROGRESS: "in progress",
+    FINISHED: "finished",
 };
 
 const inProgressList = document.querySelector("#in-progress");
@@ -23,92 +23,116 @@ const finishedList = document.querySelector("#finished");
 
 // create a constructor for the book (can be converted to a class but for learning i will use function constructor and object prototype)
 function Book(title, author, pages, status, pagesRead, category, cover) {
-	// create a read only id
-	Object.defineProperty(this, "id", {
-		value: crypto.randomUUID(), // Generates a unique ID
-		writable: false, // Makes it read-only
-		enumerable: true, // Allows it to show up in Object.keys()
-		configurable: false, // Prevents deletion or redefinition
-	});
+    // create a read only id
+    Object.defineProperty(this, "id", {
+        value: crypto.randomUUID(), // Generates a unique ID
+        writable: false, // Makes it read-only
+        enumerable: true, // Allows it to show up in Object.keys()
+        configurable: false, // Prevents deletion or redefinition
+    });
 
-	this.title = title;
-	this.author = author;
-	this.pages = pages;
-	this.status = status;
-	this.pagesRead = pagesRead || 0;
-	this.category = category;
-	this.cover = cover;
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.status = status;
+    this.pagesRead = pagesRead || 0;
+    this.category = category;
+    this.cover = cover;
 }
 
 // prototypes for Books
 Book.prototype.updateProgress = function (value) {
-	this.pagesRead = value;
-	return this.pagesRead;
+    this.pagesRead = value;
+    return this.pagesRead;
 };
 
 Book.prototype.getPercentRead = function () {
-	if (this.pagesRead === 0) return 0;
-	return ((this.pagesRead / this.pages) * 100).toFixed(2);
+    if (this.pagesRead === 0) return 0;
+    return ((this.pagesRead / this.pages) * 100).toFixed(2);
 };
 
 Book.prototype.updateStatus = function (status) {
-	this.status = status;
-	this.status === `${STATUS.FINISHED}` && this.updateProgress(this.pages);
+    this.status = status;
+    this.status === `${STATUS.FINISHED}` && this.updateProgress(this.pages);
 };
 
 // create a constructor for library with list of books and methods
 function Library() {
-	this.bookList = [];
+    this.bookList = [];
 }
 
 // prototypes for Library
 Library.prototype.getBooks = function () {
-	return this.bookList;
+    return this.bookList;
 };
 
 Library.prototype.getCategoryOfBooks = function (category) {
-	return this.bookList.filter((book) => {
-		return book.category.includes(category);
-	});
+    return this.bookList.filter((book) => {
+        return book.category.includes(category);
+    });
 };
 
 Library.prototype.addToBook = function (book) {
-	this.bookList.push(book);
+    this.bookList.push(book);
 };
 
 Library.prototype.removeBook = function (bookToBeRemoved) {
-	const newList = this.bookList.filter((book) => {
-		return book.title !== bookToBeRemoved.title;
-	});
+    const newList = this.bookList.filter((book) => {
+        return book.title !== bookToBeRemoved.title;
+    });
 
-	this.bookList = newList;
+    this.bookList = newList;
 };
 
 Library.prototype.searchBook = function (keyword) {
-	return this.bookList.filter((book) => {
-		return Object.values(book).join(" ").toLowerCase().includes(keyword.toLowerCase());
-	});
+    return this.bookList.filter((book) => {
+        return Object.values(book)
+            .join(" ")
+            .toLowerCase()
+            .includes(keyword.toLowerCase());
+    });
 };
 
 const library = new Library();
 
-const theHobbit = new Book("The Hobbit", "J.R.R Tolkien", 256, STATUS.IN_PROGRESS, 206, "fantasy");
-const theShining = new Book("The Shining", "Stephen King", 511, STATUS.QUEUE, 0, "horror");
-const atomicHabits = new Book("Atomic Habits", "James Clear", 489, STATUS.IN_PROGRESS, 100, "personal development");
+const theHobbit = new Book(
+    "The Hobbit",
+    "J.R.R Tolkien",
+    256,
+    STATUS.IN_PROGRESS,
+    206,
+    "fantasy"
+);
+const theShining = new Book(
+    "The Shining",
+    "Stephen King",
+    511,
+    STATUS.QUEUE,
+    0,
+    "horror"
+);
+const atomicHabits = new Book(
+    "Atomic Habits",
+    "James Clear",
+    489,
+    STATUS.IN_PROGRESS,
+    100,
+    "personal development"
+);
 
 const displayInProgressBooks = (book) => {
-	const cardLarge = createLargeCard(book, "large");
-	inProgressList.appendChild(cardLarge);
+    const cardLarge = createLargeCard(book, "large");
+    inProgressList.appendChild(cardLarge);
 };
 
 const displayInQueueBooks = (book) => {
-	const card = createLargeCard(book, "small");
-	inQueueList.appendChild(card);
+    const card = createLargeCard(book, "small");
+    inQueueList.appendChild(card);
 };
 
 const displayFinishedBooks = (book) => {
-	const card = createLargeCard(book, "small");
-	finishedList.appendChild(card);
+    const card = createLargeCard(book, "small");
+    finishedList.appendChild(card);
 };
 
 library.addToBook(theHobbit);
@@ -125,70 +149,78 @@ closeFormBtn.classList.add("close-btn");
 formContainer.appendChild(closeFormBtn);
 
 addBookBtn.addEventListener("click", () => {
-	formContainer.style.display = "block";
+    formContainer.style.display = "block";
 
-	setTimeout(() => {
-		formContainer.classList.remove("hide");
-		formContainer.classList.add("show");
-	}, 10);
+    setTimeout(() => {
+        formContainer.classList.remove("hide");
+        formContainer.classList.add("show");
+    }, 10);
 });
 
 closeFormBtn.addEventListener("click", () => {
-	formContainer.classList.remove("show");
-	formContainer.classList.add("hide");
+    formContainer.classList.remove("show");
+    formContainer.classList.add("hide");
 
-	setTimeout(() => {
-		formContainer.style.display = "none";
-	}, 300);
+    setTimeout(() => {
+        formContainer.style.display = "none";
+    }, 300);
 });
 
 addForm.addEventListener("submit", (e) => {
-	e.preventDefault();
+    e.preventDefault();
 
-	const title = e.target.title.value.trim();
-	const author = e.target.author.value.trim();
-	const pages = parseInt(e.target.pages.value.trim(), 10) || 0;
-	const pagesRead = 0;
-	const status = STATUS.QUEUE;
-	const category = e.target.genre.value;
-	const cover = e.target.cover.value || "";
+    const title = e.target.title.value.trim();
+    const author = e.target.author.value.trim();
+    const pages = parseInt(e.target.pages.value.trim(), 10) || 0;
+    const pagesRead = 0;
+    const status = STATUS.QUEUE;
+    const category = e.target.genre.value;
+    const cover = e.target.cover.value || "";
 
-	if (!title || !author || !status) {
-		alert("Please fill in all required fields!");
-		return;
-	}
+    if (!title || !author || !status) {
+        alert("Please fill in all required fields!");
+        return;
+    }
 
-	const newBook = new Book(title, author, pages, status, pagesRead, category, cover);
-	library.addToBook(newBook);
+    const newBook = new Book(
+        title,
+        author,
+        pages,
+        status,
+        pagesRead,
+        category,
+        cover
+    );
+    library.addToBook(newBook);
 
-	displayInQueueBooks(newBook);
+    displayInQueueBooks(newBook);
 
-	addForm.reset();
+    addForm.reset();
 
-	formContainer.classList.remove("show");
-	formContainer.classList.add("hide");
+    formContainer.classList.remove("show");
+    formContainer.classList.add("hide");
 
-	setTimeout(() => {
-		formContainer.style.display = "none";
-	}, 300);
+    setTimeout(() => {
+        formContainer.style.display = "none";
+    }, 300);
 
-	console.log(library.getBooks());
+    console.log(library.getBooks());
 });
 
 const renderBooks = (books) => {
-	inProgressList.innerHTML = "";
-	inQueueList.innerHTML = "";
-	finishedList.innerHTML = "";
+    inProgressList.innerHTML = "";
+    inQueueList.innerHTML = "";
+    finishedList.innerHTML = "";
 
-	books.forEach((book) => {
-		if (book.status === STATUS.IN_PROGRESS) {
-			displayInProgressBooks(book);
-		} else if (book.status === STATUS.QUEUE) {
-			displayInQueueBooks(book);
-		} else {
-			displayFinishedBooks(book);
-		}
-	});
+    books.forEach((book) => {
+        if (book.status === STATUS.IN_PROGRESS) {
+            displayInProgressBooks(book);
+        } else if (book.status === STATUS.QUEUE) {
+            displayInQueueBooks(book);
+        } else {
+            displayFinishedBooks(book);
+        }
+    });
 };
 
 renderBooks(library.getBooks());
@@ -196,7 +228,20 @@ renderBooks(library.getBooks());
 const searchInput = document.querySelector("#search");
 
 searchInput.addEventListener("input", (e) => {
-	const keyword = e.target.value;
-	const filteredBooks = library.searchBook(keyword);
-	renderBooks(filteredBooks);
+    const keyword = e.target.value;
+    const filteredBooks = library.searchBook(keyword);
+    renderBooks(filteredBooks);
+});
+
+document.addEventListener("click", function (event) {
+    if (event.target.closest(".card-xl")) {
+        const clickedCard = event.target.closest(".card-xl");
+        const books = library.getBooks();
+        const selectedBook = books.filter((book) => {
+            return book.id === clickedCard.dataset.id;
+        })[0];
+
+        console.log(selectedBook);
+        createBookModal(selectedBook, library, renderBooks);
+    }
 });
