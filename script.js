@@ -6,20 +6,27 @@
 // a button to add a book that opens a modal where user can select what book to add and to select the status
 // the book should have the option to remove, to change status and to update the pages read to keep track
 // the in progress books should have a different card for desktop
+// when click on book card, open a modal to edit book
 
 import { createLargeCard } from "./cards.js";
 import { createBookModal } from "./bookModal.js";
-// declare a constant with three status values
 
+// declare a constant with three status values
 const STATUS = {
     QUEUE: "queue",
     IN_PROGRESS: "in progress",
     FINISHED: "finished",
 };
 
+// ui
 const inProgressList = document.querySelector("#in-progress");
 const inQueueList = document.querySelector("#in-queue");
 const finishedList = document.querySelector("#finished");
+const addBookBtn = document.querySelector("#add-book");
+const formContainer = document.querySelector(".add-form-container");
+const closeFormBtn = document.createElement("button");
+const addForm = document.querySelector("#add-form");
+const searchInput = document.querySelector("#search");
 
 // create a constructor for the book (can be converted to a class but for learning i will use function constructor and object prototype)
 function Book(title, author, pages, status, pagesRead, category, cover) {
@@ -95,6 +102,7 @@ Library.prototype.searchBook = function (keyword) {
 
 const library = new Library();
 
+// mock books
 const theHobbit = new Book(
     "The Hobbit",
     "J.R.R Tolkien",
@@ -120,29 +128,26 @@ const atomicHabits = new Book(
     "personal development"
 );
 
-const displayInProgressBooks = (book) => {
-    const cardLarge = createLargeCard(book, "large");
-    inProgressList.appendChild(cardLarge);
-};
-
-const displayInQueueBooks = (book) => {
-    const card = createLargeCard(book, "small");
-    inQueueList.appendChild(card);
-};
-
-const displayFinishedBooks = (book) => {
-    const card = createLargeCard(book, "small");
-    finishedList.appendChild(card);
-};
-
+// add mock books to library
 library.addToBook(theHobbit);
 library.addToBook(theShining);
 library.addToBook(atomicHabits);
 
-const addBookBtn = document.querySelector("#add-book");
-const formContainer = document.querySelector(".add-form-container");
-const closeFormBtn = document.createElement("button");
-const addForm = document.querySelector("#add-form");
+const displayBooksByStatus = (book, status) => {
+    const { IN_PROGRESS, QUEUE, FINISHED } = STATUS;
+    const cssClass = status === IN_PROGRESS ? "large" : "small";
+    const card = createLargeCard(book, cssClass);
+    switch (status) {
+        case IN_PROGRESS:
+            inProgressList.appendChild(card);
+            break;
+        case QUEUE:
+            inQueueList.appendChild(card);
+            break;
+        case FINISHED:
+            finishedList.appendChild(card);
+    }
+};
 
 closeFormBtn.textContent = "×";
 closeFormBtn.classList.add("close-btn");
@@ -193,7 +198,7 @@ addForm.addEventListener("submit", (e) => {
     );
     library.addToBook(newBook);
 
-    displayInQueueBooks(newBook);
+    displayBooksByStatus(newBook, STATUS.QUEUE);
 
     addForm.reset();
 
@@ -203,29 +208,26 @@ addForm.addEventListener("submit", (e) => {
     setTimeout(() => {
         formContainer.style.display = "none";
     }, 300);
-
-    console.log(library.getBooks());
 });
 
 const renderBooks = (books) => {
+    const { IN_PROGRESS, QUEUE, FINISHED } = STATUS;
     inProgressList.innerHTML = "";
     inQueueList.innerHTML = "";
     finishedList.innerHTML = "";
 
     books.forEach((book) => {
-        if (book.status === STATUS.IN_PROGRESS) {
-            displayInProgressBooks(book);
-        } else if (book.status === STATUS.QUEUE) {
-            displayInQueueBooks(book);
+        if (book.status === IN_PROGRESS) {
+            displayBooksByStatus(book, IN_PROGRESS);
+        } else if (book.status === QUEUE) {
+            displayBooksByStatus(book, QUEUE);
         } else {
-            displayFinishedBooks(book);
+            displayBooksByStatus(book, FINISHED);
         }
     });
 };
 
 renderBooks(library.getBooks());
-
-const searchInput = document.querySelector("#search");
 
 searchInput.addEventListener("input", (e) => {
     const keyword = e.target.value;
@@ -233,9 +235,9 @@ searchInput.addEventListener("input", (e) => {
     renderBooks(filteredBooks);
 });
 
-document.addEventListener("click", function (event) {
-    if (event.target.closest(".card-xl")) {
-        const clickedCard = event.target.closest(".card-xl");
+document.addEventListener("click", (e) => {
+    if (e.target.closest(".card-xl")) {
+        const clickedCard = e.target.closest(".card-xl");
         const books = library.getBooks();
         const selectedBook = books.filter((book) => {
             return book.id === clickedCard.dataset.id;
