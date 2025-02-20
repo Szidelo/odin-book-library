@@ -350,7 +350,7 @@ select:hover {
 	background-color: rgba(245, 245, 245, 0.8);
 }
 
-#add-form button, .modal-content button {
+#add-form button, .modal-content button:not(.close-btn) {
 	background: var(--moonstone);
 	color: white;
 	border: none;
@@ -362,7 +362,7 @@ select:hover {
 	margin-top: 1rem;
 }
 
-#add-form button:hover, .modal-content button {
+#add-form button:hover, .modal-content button:not(.close-btn) {
 	background: var(--moonstone-dark);
 }
 
@@ -397,21 +397,22 @@ select:hover {
 }
 
 .modal-content {
+	position: relative;
     background: white;
-    padding: 20px;
+    padding: 2rem;
     border-radius: 8px;
     width: 300px;
     text-align: left;
 }
 
 .modal-content button {
-    margin-top: 10px;
+    margin-top: 1rem;
 }
 
 .close-modal {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 1rem;
+    right: 1rem;
     background: none;
     border: none;
     font-size: 20px;

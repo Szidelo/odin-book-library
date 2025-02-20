@@ -10,7 +10,7 @@ export function createBookModal(selectedBook, library, renderBooks) {
 
     modal.innerHTML = `
         <div class="modal-content">
-            <button class="close-modal">×</button>
+            <button class="close-btn">×</button>
             <h2>Edit Book</h2>
             <div>
                 <label for="modal-title">Title:</label>
@@ -56,7 +56,7 @@ export function createBookModal(selectedBook, library, renderBooks) {
 
     document.body.appendChild(modal);
 
-    const closeModalBtn = modal.querySelector(".close-modal");
+    const closeModalBtn = modal.querySelector(".close-btn");
     closeModalBtn.addEventListener("click", () => {
         modal.remove();
     });
