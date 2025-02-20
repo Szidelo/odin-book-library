@@ -56,9 +56,23 @@ export function createBookModal(selectedBook, library, renderBooks) {
 
     document.body.appendChild(modal);
 
+    // modal animation
+    setTimeout(() => {
+        modal.classList.add("show");
+        const modalContent = modal.querySelector(".modal-content");
+        setTimeout(() => modalContent.classList.add("show"), 10); // delay content animation slightly
+    }, 10);
+
     const closeModalBtn = modal.querySelector(".close-btn");
     closeModalBtn.addEventListener("click", () => {
-        modal.remove();
+        const modalContent = modal.querySelector(".modal-content");
+        modalContent.classList.remove("show");
+        modalContent.classList.add("hide");
+
+        setTimeout(() => {
+            modal.classList.remove("show");
+            modal.remove(); // remove modal after the animation completes
+        }, 300); // delay removal until animation is finished
     });
 
     const saveBookBtn = modal.querySelector("#save-book");
@@ -72,8 +86,13 @@ export function createBookModal(selectedBook, library, renderBooks) {
         selectedBook.updateProgress(pagesRead);
         selectedBook.updateStatus(status);
 
-        modal.remove();
+        modal.querySelector(".modal-content").classList.remove("show");
+        modal.querySelector(".modal-content").classList.add("hide");
 
-        renderBooks(library.getBooks());
+        setTimeout(() => {
+            modal.classList.remove("show");
+            modal.remove(); // remove modal after the animation completes
+            renderBooks(library.getBooks());
+        }, 300); // delay removal until animation is finished
     });
 }
