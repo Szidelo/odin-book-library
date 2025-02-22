@@ -135,6 +135,7 @@ const displayBooksByStatus = (book, status) => {
 
 closeFormBtn.textContent = "×";
 closeFormBtn.classList.add("close-btn");
+closeFormBtn.classList.add("form-close");
 formContainer.appendChild(closeFormBtn);
 
 addBookBtn.addEventListener("click", () => {

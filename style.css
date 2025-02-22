@@ -58,6 +58,7 @@ hr {
 
 .search-container {
 	position: relative;
+	display: flex;
 }
 
 .search-container input {
@@ -83,7 +84,7 @@ hr {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 2rem;
+	gap: 1rem;
 }
 
 .avatar-container,
@@ -136,13 +137,15 @@ button {
 	bottom: 3rem;
 	left: 50%;
 	transform: translateX(-50%);
+	line-height: none;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	background-color: var(--moonstone-dark);
 	border: 1px solid transparent;
+	box-shadow: 0 2px 2px 1px var(--shadow);
 	color: white;
-	border-radius: 50%;
+	border-radius: 8px;
 	height: 4rem;
 	width: 4rem;
 	font-size: 3rem;
@@ -352,7 +355,7 @@ select {
 	border: none;
 	border-bottom: 2px solid var(--shadow);
 	font-size: 1rem;
-	border-radius: 4px;
+	border-radius: none;
 }
 
 select {
@@ -410,14 +413,18 @@ select:hover {
 
 .close-btn {
 	position: absolute;
-	top: 10px;
-	right: 10px;
+	top: -1rem;
+	right: 0;
 	background: none;
 	border: none;
 	font-size: 1.5rem;
 	color: var(--shadow);
 	cursor: pointer;
 	transition: color 0.3s ease-in-out;
+}
+
+.close-btn.form-close {
+	top: 0;
 }
 
 .close-btn:hover {
@@ -432,7 +439,7 @@ select:hover {
 	width: 100%;
 	height: 100%;
 	background: none;
-	display: none; /* Start hidden */
+	display: none;
 	justify-content: center;
 	align-items: center;
 	z-index: 999;
@@ -490,6 +497,7 @@ select:hover {
 	width: 50%;
 	height: 100%;
 	display: flex;
+	gap: 1rem;
 	flex-direction: column;
 	justify-content: center;
 }
@@ -509,4 +517,106 @@ select:hover {
 .edit-book-btn:hover {
 	letter-spacing: 1px;
 	color: var(--dark-grey);
+}
+
+.footer-container {
+	padding: 2rem;
+	width: 100%;
+	text-align: center;
+}
+
+@media (max-width: 768px) {
+	body {
+		overflow-x: hidden;
+		font-size: 12px;
+	}
+	.card-xl {
+		flex-direction: column;
+		width: 15rem;
+		height: 25rem;
+	}
+
+	.card-xl .card-xl__book-cover {
+		width: 100%;
+		height: 75%;
+	}
+
+	.card-xl .card-xl__info {
+		width: 100%;
+		height: 25%;
+	}
+
+	.card-xl__info .info-progress {
+		display: none;
+	}
+
+	.search-container input {
+		min-width: 10px;
+	}
+
+	.container {
+		width: 100%;
+		padding-left: 1rem;
+		margin: 0;
+	}
+
+	.add-form-container {
+		width: 100%;
+	}
+
+	.user-profile p {
+		display: none;
+	}
+
+	.modal-content {
+		flex-direction: column;
+		height: 100vh;
+	}
+
+	.modal-book-cover {
+		margin-top: 2rem;
+		width: 100%;
+		height: 20%;
+	}
+
+	.modal-book-cover img {
+		height: 100%;
+		width: 100%;
+		object-fit: cover;
+	}
+
+	.modal-content__info {
+		width: 100%;
+	}
+
+	.close-btn {
+		top: 0;
+		right: 1rem;
+		margin: 0;
+	}
+
+	#add-book {
+		position: sticky;
+		bottom: 1rem;
+		left: 50%;
+		transform: translateX(-50%);
+		line-height: none;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: var(--moonstone-dark);
+		border: 1px solid transparent;
+		box-shadow: 0 2px 2px 1px var(--shadow);
+		color: white;
+		border-radius: 8px;
+		height: 4rem;
+		width: 4rem;
+		font-size: 3rem;
+		&:hover {
+			background-color: var(--moonstone);
+		}
+		&:active {
+			box-shadow: 0 2px 2px 1px var(--shadow);
+		}
+	}
 }
