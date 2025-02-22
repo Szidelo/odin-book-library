@@ -13,9 +13,9 @@ import { createBookModal } from "./bookModal.js";
 
 // declare a constant with three status values
 const STATUS = {
-    QUEUE: "queue",
-    IN_PROGRESS: "in progress",
-    FINISHED: "finished",
+	QUEUE: "queue",
+	IN_PROGRESS: "in progress",
+	FINISHED: "finished",
 };
 
 // ui
@@ -30,103 +30,87 @@ const searchInput = document.querySelector("#search");
 
 // create a constructor for the book (can be converted to a class but for learning i will use function constructor and object prototype)
 function Book(title, author, pages, status, pagesRead, category, cover) {
-    // create a read only id
-    Object.defineProperty(this, "id", {
-        value: crypto.randomUUID(), // Generates a unique ID
-        writable: false, // Makes it read-only
-        enumerable: true, // Allows it to show up in Object.keys()
-        configurable: false, // Prevents deletion or redefinition
-    });
+	// create a read only id
+	Object.defineProperty(this, "id", {
+		value: crypto.randomUUID(), // Generates a unique ID
+		writable: false, // Makes it read-only
+		enumerable: true, // Allows it to show up in Object.keys()
+		configurable: false, // Prevents deletion or redefinition
+	});
 
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.status = status;
-    this.pagesRead = pagesRead || 0;
-    this.category = category;
-    this.cover = cover;
+	this.title = title;
+	this.author = author;
+	this.pages = pages;
+	this.status = status;
+	this.pagesRead = pagesRead || 0;
+	this.category = category;
+	this.cover = cover;
 }
 
 // prototypes for Books
 Book.prototype.updateProgress = function (value) {
-    this.pagesRead = value;
-    return this.pagesRead;
+	this.pagesRead = value;
+	return this.pagesRead;
 };
 
 Book.prototype.getPercentRead = function () {
-    if (this.pagesRead === 0) return 0;
-    return ((this.pagesRead / this.pages) * 100).toFixed(2);
+	if (this.pagesRead === 0) return 0;
+	return ((this.pagesRead / this.pages) * 100).toFixed(2);
 };
 
 Book.prototype.updateStatus = function (status) {
-    this.status = status;
-    this.status === `${STATUS.FINISHED}` && this.updateProgress(this.pages);
+	this.status = status;
+	this.status === `${STATUS.FINISHED}` && this.updateProgress(this.pages);
+};
+
+Book.prototype.updateCategory = function (category) {
+	this.category = category;
+};
+
+Book.prototype.updateCover = function (cover) {
+	this.cover = cover;
 };
 
 // create a constructor for library with list of books and methods
 function Library() {
-    this.bookList = [];
+	this.bookList = [];
 }
 
 // prototypes for Library
 Library.prototype.getBooks = function () {
-    return this.bookList;
+	return this.bookList;
 };
 
 Library.prototype.getCategoryOfBooks = function (category) {
-    return this.bookList.filter((book) => {
-        return book.category.includes(category);
-    });
+	return this.bookList.filter((book) => {
+		return book.category.includes(category);
+	});
 };
 
 Library.prototype.addToBook = function (book) {
-    this.bookList.push(book);
+	this.bookList.push(book);
 };
 
 Library.prototype.removeBook = function (bookToBeRemoved) {
-    const newList = this.bookList.filter((book) => {
-        return book.title !== bookToBeRemoved.title;
-    });
+	const newList = this.bookList.filter((book) => {
+		return book.title !== bookToBeRemoved.title;
+	});
 
-    this.bookList = newList;
+	this.bookList = newList;
 };
 
 Library.prototype.searchBook = function (keyword) {
-    return this.bookList.filter((book) => {
-        return Object.values(book)
-            .join(" ")
-            .toLowerCase()
-            .includes(keyword.toLowerCase());
-    });
+	return this.bookList.filter((book) => {
+		return Object.values(book).join(" ").toLowerCase().includes(keyword.toLowerCase());
+	});
 };
 
 const library = new Library();
 
 // mock books
-const theHobbit = new Book(
-    "The Hobbit",
-    "J.R.R Tolkien",
-    256,
-    STATUS.IN_PROGRESS,
-    206,
-    "fantasy"
-);
-const theShining = new Book(
-    "The Shining",
-    "Stephen King",
-    511,
-    STATUS.QUEUE,
-    0,
-    "horror"
-);
-const atomicHabits = new Book(
-    "Atomic Habits",
-    "James Clear",
-    489,
-    STATUS.IN_PROGRESS,
-    100,
-    "personal development"
-);
+const theHobbit = new Book("The Hobbit", "J.R.R Tolkien", 256, STATUS.IN_PROGRESS, 206, "fantasy");
+const theShining = new Book("The Shining", "Stephen King", 511, STATUS.QUEUE, 0, "horror");
+const atomicHabits = new Book("Atomic Habits", "James Clear", 489, STATUS.IN_PROGRESS, 100, "personal development");
 
 // add mock books to library
 library.addToBook(theHobbit);
@@ -134,19 +118,19 @@ library.addToBook(theShining);
 library.addToBook(atomicHabits);
 
 const displayBooksByStatus = (book, status) => {
-    const { IN_PROGRESS, QUEUE, FINISHED } = STATUS;
-    const cssClass = status === IN_PROGRESS ? "large" : "small";
-    const card = createLargeCard(book, cssClass);
-    switch (status) {
-        case IN_PROGRESS:
-            inProgressList.appendChild(card);
-            break;
-        case QUEUE:
-            inQueueList.appendChild(card);
-            break;
-        case FINISHED:
-            finishedList.appendChild(card);
-    }
+	const { IN_PROGRESS, QUEUE, FINISHED } = STATUS;
+	const cssClass = status === IN_PROGRESS ? "large" : "small";
+	const card = createLargeCard(book, cssClass);
+	switch (status) {
+		case IN_PROGRESS:
+			inProgressList.appendChild(card);
+			break;
+		case QUEUE:
+			inQueueList.appendChild(card);
+			break;
+		case FINISHED:
+			finishedList.appendChild(card);
+	}
 };
 
 closeFormBtn.textContent = "×";
@@ -154,96 +138,147 @@ closeFormBtn.classList.add("close-btn");
 formContainer.appendChild(closeFormBtn);
 
 addBookBtn.addEventListener("click", () => {
-    formContainer.style.display = "block";
+	formContainer.style.display = "block";
 
-    setTimeout(() => {
-        formContainer.classList.remove("hide");
-        formContainer.classList.add("show");
-    }, 10);
+	setTimeout(() => {
+		formContainer.classList.remove("hide");
+		formContainer.classList.add("show");
+	}, 10);
 });
 
 closeFormBtn.addEventListener("click", () => {
-    formContainer.classList.remove("show");
-    formContainer.classList.add("hide");
+	formContainer.classList.remove("show");
+	formContainer.classList.add("hide");
 
-    setTimeout(() => {
-        formContainer.style.display = "none";
-    }, 300);
+	setTimeout(() => {
+		formContainer.style.display = "none";
+	}, 300);
 });
 
 addForm.addEventListener("submit", (e) => {
-    e.preventDefault();
+	e.preventDefault();
 
-    const title = e.target.title.value.trim();
-    const author = e.target.author.value.trim();
-    const pages = parseInt(e.target.pages.value.trim(), 10) || 0;
-    const pagesRead = 0;
-    const status = STATUS.QUEUE;
-    const category = e.target.genre.value;
-    const cover = e.target.cover.value || "";
+	const title = e.target.title.value.trim();
+	const author = e.target.author.value.trim();
+	const pages = parseInt(e.target.pages.value.trim(), 10) || 0;
+	const pagesRead = 0;
+	const status = STATUS.QUEUE;
+	const category = e.target.genre.value;
+	const cover = e.target.cover.value || "";
 
-    if (!title || !author || !status) {
-        alert("Please fill in all required fields!");
-        return;
-    }
+	if (!title || !author || !status) {
+		alert("Please fill in all required fields!");
+		return;
+	}
 
-    const newBook = new Book(
-        title,
-        author,
-        pages,
-        status,
-        pagesRead,
-        category,
-        cover
-    );
-    library.addToBook(newBook);
+	const newBook = new Book(title, author, pages, status, pagesRead, category, cover);
+	library.addToBook(newBook);
 
-    displayBooksByStatus(newBook, STATUS.QUEUE);
+	renderBooks(library.getBooks());
 
-    addForm.reset();
+	addForm.reset();
 
-    formContainer.classList.remove("show");
-    formContainer.classList.add("hide");
+	formContainer.classList.remove("show");
+	formContainer.classList.add("hide");
 
-    setTimeout(() => {
-        formContainer.style.display = "none";
-    }, 300);
+	setTimeout(() => {
+		formContainer.style.display = "none";
+	}, 300);
 });
 
 const renderBooks = (books) => {
-    const { IN_PROGRESS, QUEUE, FINISHED } = STATUS;
-    inProgressList.innerHTML = "";
-    inQueueList.innerHTML = "";
-    finishedList.innerHTML = "";
+	const { IN_PROGRESS, QUEUE, FINISHED } = STATUS;
 
-    books.forEach((book) => {
-        if (book.status === IN_PROGRESS) {
-            displayBooksByStatus(book, IN_PROGRESS);
-        } else if (book.status === QUEUE) {
-            displayBooksByStatus(book, QUEUE);
-        } else {
-            displayBooksByStatus(book, FINISHED);
-        }
-    });
+	inProgressList.innerHTML = "";
+	inQueueList.innerHTML = "";
+	finishedList.innerHTML = "";
+
+	let hasInProgress = false;
+	let hasQueue = false;
+	let hasFinished = false;
+
+	books.forEach((book) => {
+		if (book.status === IN_PROGRESS) {
+			displayBooksByStatus(book, IN_PROGRESS);
+			hasInProgress = true;
+		} else if (book.status === QUEUE) {
+			displayBooksByStatus(book, QUEUE);
+			hasQueue = true;
+		} else {
+			displayBooksByStatus(book, FINISHED);
+			hasFinished = true;
+		}
+	});
+
+	inProgressList.parentElement.style.display = hasInProgress ? "initial" : "none";
+	inQueueList.parentElement.style.display = hasQueue ? "initial" : "none";
+	finishedList.parentElement.style.display = hasFinished ? "initial" : "none";
 };
 
 renderBooks(library.getBooks());
 
 searchInput.addEventListener("input", (e) => {
-    const keyword = e.target.value;
-    const filteredBooks = library.searchBook(keyword);
-    renderBooks(filteredBooks);
+	const keyword = e.target.value;
+	const filteredBooks = library.searchBook(keyword);
+	renderBooks(filteredBooks);
 });
 
 document.addEventListener("click", (e) => {
-    if (e.target.closest(".card-xl")) {
-        const clickedCard = e.target.closest(".card-xl");
-        const books = library.getBooks();
-        const selectedBook = books.filter((book) => {
-            return book.id === clickedCard.dataset.id;
-        })[0];
+	if (e.target.classList.contains("edit-book-btn")) {
+		const bookId = e.target.dataset.id;
+		const books = library.getBooks();
+		const selectedBook = books.find((book) => book.id === bookId);
 
-        console.log(selectedBook);
-        createBookModal(selectedBook, library, renderBooks);
-    }
+		if (selectedBook) {
+			createBookModal(selectedBook, library, renderBooks);
+		}
+	}
+});
+
+const enableHorizontalScroll = (containerId) => {
+	const list = document.getElementById(containerId);
+	let isDown = false;
+	let startX;
+	let scrollLeft;
+
+	list.addEventListener("mousedown", (e) => {
+		isDown = true;
+		list.classList.add("active");
+		startX = e.pageX - list.offsetLeft;
+		scrollLeft = list.scrollLeft;
+	});
+
+	list.addEventListener("mouseleave", () => {
+		isDown = false;
+		list.classList.remove("active");
+	});
+
+	list.addEventListener("mouseup", () => {
+		isDown = false;
+		list.classList.remove("active");
+	});
+
+	list.addEventListener("mousemove", (e) => {
+		if (!isDown) return;
+		e.preventDefault();
+		const x = e.pageX - list.offsetLeft;
+		const walk = (x - startX) * 2; // adjust scroll speed
+		list.scrollLeft = scrollLeft - walk;
+	});
+
+	// Touch support for mobile
+	list.addEventListener("touchstart", (e) => {
+		startX = e.touches[0].clientX;
+		scrollLeft = list.scrollLeft;
+	});
+
+	list.addEventListener("touchmove", (e) => {
+		const x = e.touches[0].clientX;
+		const walk = (x - startX) * 2;
+		list.scrollLeft = scrollLeft - walk;
+	});
+};
+
+["in-progress", "in-queue", "finished"].forEach((containerId) => {
+	enableHorizontalScroll(containerId);
 });

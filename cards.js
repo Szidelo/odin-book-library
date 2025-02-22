@@ -1,73 +1,82 @@
 export function createLargeCard(book, size) {
-    const card = document.createElement("div");
+	const card = document.createElement("div");
+	card.classList.add("card-xl");
+	card.dataset.id = book.id;
 
-    card.classList.add("card-xl");
+	if (size === "small") {
+		card.classList.add("variation-small");
+	}
 
-    card.dataset.id = book.id;
+	// Book Cover
+	const bookCover = document.createElement("div");
+	bookCover.classList.add("card-xl__book-cover");
 
-    if (size === "small") {
-        card.classList.add("variation-small");
-    }
+	const title = document.createElement("h3");
+	title.textContent = book.title;
 
-    // book cover
-    const bookCover = document.createElement("div");
-    bookCover.classList.add("card-xl__book-cover");
+	const author = document.createElement("p");
+	author.textContent = book.author;
 
-    const title = document.createElement("h3");
-    title.textContent = book.title;
+	if (book.cover) {
+		bookCover.style.backgroundImage = `url(${book.cover})`;
+		bookCover.style.backgroundSize = "cover";
+	} else {
+		bookCover.appendChild(title);
+		bookCover.appendChild(author);
+	}
 
-    const author = document.createElement("p");
-    author.textContent = book.author;
+	// Info Section
+	const info = document.createElement("div");
+	info.classList.add("card-xl__info");
 
-    bookCover.appendChild(title);
-    bookCover.appendChild(author);
+	const infoHeader = document.createElement("div");
+	infoHeader.classList.add("info-header");
 
-    // info section
-    const info = document.createElement("div");
-    info.classList.add("card-xl__info");
+	const infoTitle = document.createElement("h3");
+	infoTitle.textContent = book.title;
 
-    const infoHeader = document.createElement("div");
-    infoHeader.classList.add("info-header");
+	const infoAuthor = document.createElement("p");
+	infoAuthor.textContent = book.author;
 
-    const infoTitle = document.createElement("h3");
-    infoTitle.textContent = book.title;
+	infoHeader.appendChild(infoTitle);
+	infoHeader.appendChild(infoAuthor);
 
-    const infoAuthor = document.createElement("p");
-    infoAuthor.textContent = book.author;
+	const progress = document.createElement("div");
+	progress.classList.add("info-progress");
 
-    infoHeader.appendChild(infoTitle);
-    infoHeader.appendChild(infoAuthor);
+	const progressTitle = document.createElement("h3");
+	progressTitle.textContent = "Your Progress";
 
-    const progress = document.createElement("div");
-    progress.classList.add("info-progress");
+	const progressBar = document.createElement("div");
+	progressBar.classList.add("progress-bar");
 
-    const progressTitle = document.createElement("h3");
-    progressTitle.textContent = "Your Progress";
+	const progressFill = document.createElement("div");
+	progressFill.classList.add("progress-bar__fill");
+	progressFill.style.width = `${book.getPercentRead()}%`;
 
-    const progressBar = document.createElement("div");
-    progressBar.classList.add("progress-bar");
-
-    const progressFill = document.createElement("div");
-    progressFill.classList.add("progress-bar__fill");
-    progressFill.style.width = `${book.getPercentRead()}%`;
-
-    const progressText = document.createElement("p");
-    progressText.innerHTML = `
+	const progressText = document.createElement("p");
+	progressText.innerHTML = `
         <span class="pages-finished">${book.pagesRead}</span> of 
         <span class="pages-total">${book.pages}</span> Pages
     `;
 
-    progressBar.appendChild(progressFill);
+	progressBar.appendChild(progressFill);
 
-    progress.appendChild(progressTitle);
-    progress.appendChild(progressBar);
-    progress.appendChild(progressText);
+	progress.appendChild(progressTitle);
+	progress.appendChild(progressBar);
+	progress.appendChild(progressText);
 
-    info.appendChild(infoHeader);
-    info.appendChild(progress);
+	const editButton = document.createElement("button");
+	editButton.textContent = "Edit Book -->";
+	editButton.classList.add("edit-book-btn");
+	editButton.dataset.id = book.id;
 
-    card.appendChild(bookCover);
-    card.appendChild(info);
+	info.appendChild(infoHeader);
+	info.appendChild(progress);
+	info.appendChild(editButton);
 
-    return card;
+	card.appendChild(bookCover);
+	card.appendChild(info);
+
+	return card;
 }

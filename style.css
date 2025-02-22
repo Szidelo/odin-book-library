@@ -30,10 +30,16 @@ main {
 	flex-direction: column;
 	gap: 2rem;
 	background-color: var(--white-smoke);
+	min-height: 100vh;
 }
 
 header {
 	background-color: var(--white-smoke);
+}
+
+hr {
+	margin-top: 2rem;
+	opacity: 0.5;
 }
 
 .header-container,
@@ -164,6 +170,39 @@ button {
 	gap: 2rem;
 }
 
+.list {
+	display: flex;
+	gap: 2rem;
+	padding: 0 1rem;
+	overflow-x: auto;
+	scroll-behavior: smooth;
+	white-space: nowrap;
+	padding-bottom: 1rem;
+	scrollbar-width: none;
+	scrollbar-color: transparent transparent;
+}
+
+.list::-webkit-scrollbar {
+	display: none;
+}
+
+.list::-webkit-scrollbar-thumb {
+	background: var(--dark-grey);
+	border-radius: 4px;
+}
+
+.list::-webkit-scrollbar-track {
+	background: var(--light-grey);
+}
+
+/* Edge & Modern Browsers (Experimental) */
+@supports (scrollbar-color: var(--dark-grey) var(--light-grey)) {
+	.list {
+		scrollbar-width: thin;
+		scrollbar-color: transparent;
+	}
+}
+
 .card-xl {
 	width: 30rem;
 	height: 20rem;
@@ -174,7 +213,8 @@ button {
 	box-shadow: 0 4px 6px 2px var(--shadow);
 	border-radius: 0.25rem;
 	margin-top: 3rem;
-	flex-shrink: 0;
+	flex: 0 0 auto;
+	user-select: none;
 }
 
 .card-xl.variation-small {
@@ -350,7 +390,8 @@ select:hover {
 	background-color: rgba(245, 245, 245, 0.8);
 }
 
-#add-form button, .modal-content button:not(.close-btn) {
+#add-form button,
+.modal-content button:not(.close-btn) {
 	background: var(--moonstone);
 	color: white;
 	border: none;
@@ -362,7 +403,8 @@ select:hover {
 	margin-top: 1rem;
 }
 
-#add-form button:hover, .modal-content button:not(.close-btn) {
+#add-form button:hover,
+.modal-content button:not(.close-btn) {
 	background: var(--moonstone-dark);
 }
 
@@ -384,47 +426,87 @@ select:hover {
 }
 
 .book-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: none;
-    display: none; /* Start hidden */
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-    transition: opacity 0.3s ease-out;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: none;
+	display: none; /* Start hidden */
+	justify-content: center;
+	align-items: center;
+	z-index: 999;
+	transition: opacity 0.3s ease-out;
 }
 
 .book-modal.show {
-    display: flex; 
+	display: flex;
 }
 
 .modal-content {
-    position: relative;
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    width: 300px;
-    text-align: left;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    transform: scale(0.8);
-    opacity: 0;
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+	position: relative;
+	background: var(--white-smoke);
+	display: flex;
+	gap: 2rem;
+	padding: 2rem;
+	border-radius: 8px;
+	width: 40rem;
+	height: 32rem;
+	text-align: left;
+	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+	transform: scale(0.8);
+	opacity: 0;
+	transition: transform 0.3s ease-out, opacity 0.3s ease-out;
 }
 
 .modal-content.show {
-    transform: scale(1);
-    opacity: 1;
+	transform: scale(1);
+	opacity: 1;
 }
 
 .modal-content.hide {
-    transform: scale(0.8);
-    opacity: 0;
-    transition: transform 0.3s ease-in, opacity 0.3s ease-in;
+	transform: scale(0.8);
+	opacity: 0;
+	transition: transform 0.3s ease-in, opacity 0.3s ease-in;
 }
 
 .modal-content button {
-    margin-top: 1rem;
+	margin-top: 1rem;
+}
+
+.modal-book-cover {
+	width: 50%;
+	height: 100%;
+	background-color: var(--rusty-red);
+}
+
+.modal-book-cover img {
+	height: 100%;
+	width: 100%;
+	object-fit: cover;
+}
+
+.modal-content__info {
+	width: 50%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+#remove-book {
+	background: var(--rusty-red);
+}
+
+.edit-book-btn {
+	background-color: transparent;
+	text-align: left;
+	border: none;
+	padding: 1rem 0;
+	color: var(--moonstone-dark);
+}
+
+.edit-book-btn:hover {
+	letter-spacing: 1px;
+	color: var(--dark-grey);
 }
