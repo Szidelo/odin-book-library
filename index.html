@@ -4,6 +4,8 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="style.css" />
+		<script defer type="module" src="script.js"></script>
+		<script type="module" src="firebase.js"></script>
 		<title>Book Library</title>
 	</head>
 	<body>
@@ -20,15 +22,17 @@
 							</svg>
 						</div>
 						<div class="user-profile">
-							<p>Logout</p>
-							<div class="avatar-container">
-								<img class="avatar" src="./assets/profile-img.jpeg" alt="" />
-							</div>
+							<p id="logout">Logout</p>
+							<a href="./pages/auth.html">
+								<div class="avatar-container">
+									<img id="avatar" class="avatar" src="./assets/profile-img.jpeg" alt="" />
+								</div>
+							</a>
 						</div>
 					</div>
 					<div class="header-bottom">
 						<div class="user-info">
-							<h1>Hello, User</h1>
+							<h1>Hello, <span id="user-name"></span></h1>
 							<p>"Reading is essential for those who seek to rise above the ordinary", - <span>Jim Rohn</span></p>
 						</div>
 					</div>
@@ -103,6 +107,5 @@
 				</div>
 			</footer>
 		</main>
-		<script type="module" src="script.js"></script>
 	</body>
 </html>

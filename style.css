@@ -94,6 +94,11 @@ hr {
 	border-radius: 50%;
 }
 
+.avatar {
+	object-fit: cover;
+	border: 2px solid var(--black);
+}
+
 .header-bottom {
 	display: flex;
 	justify-content: space-between;
@@ -114,9 +119,15 @@ hr {
 	font-size: 3rem;
 }
 
-.user-info p {
+#user-name .user-info p {
 	font-weight: 200;
 	color: var(--dark-grey);
+}
+
+#user-name {
+	font-family: inherit;
+	font-size: inherit;
+	text-transform: capitalize;
 }
 
 button {
@@ -523,6 +534,124 @@ select:hover {
 	padding: 2rem;
 	width: 100%;
 	text-align: center;
+}
+
+#auth-main {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	height: 100vh;
+	width: 100%;
+}
+
+.auth-container {
+	padding: 4rem;
+	width: 66vw;
+	height: 100%;
+}
+
+.auth-container h1 {
+	font-size: 3rem;
+	margin-bottom: 2rem;
+	text-align: center;
+}
+
+.auth-container form {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	border-radius: 8px;
+	padding: 2rem;
+	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+	max-width: 25rem;
+	margin: 0 auto;
+}
+
+.auth-banner {
+	width: 100%;
+	max-width: 33vw;
+	height: 100%;
+	background: linear-gradient(135deg, var(--moonstone), var(--moonstone-dark));
+	color: var(--white);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	padding: 40px;
+	flex: 0 0 none;
+}
+
+.input-container input {
+	color: inherit;
+	width: 100%;
+	background-color: transparent;
+	border: none;
+	border-bottom: 1px solid #757575;
+	padding-left: 1.5rem;
+	font-size: 15px;
+}
+.input-container {
+	padding: 1% 0;
+	position: relative;
+	margin-bottom: 0 !important;
+}
+.input-container i {
+	position: absolute;
+	top: 1.7rem;
+	color: black;
+}
+.input-container input:focus {
+	background-color: transparent;
+	outline: transparent;
+	border-bottom: 1px solid hsl(327, 90%, 28%);
+}
+.input-container input::placeholder {
+	color: transparent;
+}
+.input-container label {
+	color: #757575;
+	position: relative;
+	left: 1.2em;
+	top: -1.3em;
+	cursor: auto;
+	transition: 0.3s ease all;
+}
+.input-container input:focus ~ label,
+.input-container input:not(:placeholder-shown) ~ label {
+	top: -3.5em;
+	color: hsl(327, 90%, 28%);
+	font-size: 15px;
+}
+
+.btn {
+	background: var(--moonstone);
+	color: white;
+	border: none;
+	padding: 0.75rem;
+	width: 100%;
+	font-size: 1rem;
+	cursor: pointer;
+	border-radius: 4px;
+	margin-top: 1rem;
+}
+
+.btn:hover {
+	background: var(--moonstone-dark);
+}
+
+.btn.btn-secondary {
+	background: var(--white-smoke);
+	color: var(--dark-grey);
+}
+
+.btn.btn-secondary:hover {
+	background: var(--white);
+}
+
+.hidden {
+	display: none;
 }
 
 @media (max-width: 768px) {

@@ -10,6 +10,25 @@
 
 import { createLargeCard } from "./cards.js";
 import { createBookModal } from "./bookModal.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+import { getFirestore, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+const firebaseConfig = {
+	apiKey: "AIzaSyD5afL-Mohj4kQwRu7mtaMv-o6qs6AQRTY",
+	authDomain: "book-library-60b1e.firebaseapp.com",
+	projectId: "book-library-60b1e",
+	storageBucket: "book-library-60b1e.firebasestorage.app",
+	messagingSenderId: "845622686464",
+	appId: "1:845622686464:web:ea9296f8065188bdfbb9e5",
+	measurementId: "G-GL7TZYDBX5",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 // declare a constant with three status values
 const STATUS = {
@@ -17,6 +36,38 @@ const STATUS = {
 	IN_PROGRESS: "in progress",
 	FINISHED: "finished",
 };
+
+let userName = "";
+let userPhotoURL = "";
+
+onAuthStateChanged(auth, (user) => {
+	const loggedInUserId = localStorage.getItem("userId");
+	const userNameElement = document.getElementById("user-name");
+	const userAvatar = document.getElementById("avatar");
+	if (loggedInUserId) {
+		console.log(user);
+		const docRef = doc(db, "users", loggedInUserId);
+		getDoc(docRef)
+			.then((docSnap) => {
+				if (docSnap.exists()) {
+					const userData = docSnap.data();
+					userName = userData.lastName;
+					userPhotoURL = userData.photoURL;
+					userNameElement.textContent = userName;
+					userAvatar.src = userPhotoURL;
+					console.log("Document data:", userData);
+				} else {
+					console.log("no document found matching id");
+				}
+			})
+			.catch((error) => {
+				console.log("Error getting document");
+			});
+	} else {
+		console.log("User Id not Found in Local storage");
+		window.location.href = "./auth.html";
+	}
+});
 
 // ui
 const inProgressList = document.querySelector("#in-progress");
@@ -282,4 +333,11 @@ const enableHorizontalScroll = (containerId) => {
 
 ["in-progress", "in-queue", "finished"].forEach((containerId) => {
 	enableHorizontalScroll(containerId);
+});
+
+const logOutBtn = document.getElementById("logout");
+
+logOutBtn.addEventListener("click", () => {
+	localStorage.removeItem("userId");
+	signOut(auth);
 });
