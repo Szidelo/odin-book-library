@@ -40,13 +40,13 @@ if (window.location.pathname === "/auth.html") {
 	signUpButton.addEventListener("click", function () {
 		console.log("clicked sign up");
 		signInFormElement.style.display = "none";
-		signUpFormElement.style.display = "block";
+		signUpFormElement.style.display = "flex";
 		signUpBanner.style.display = "none";
 		signInBanner.style.display = "block";
 	});
 	signInButton.addEventListener("click", function () {
 		console.log("clicked sign in");
-		signInFormElement.style.display = "block";
+		signInFormElement.style.display = "flex";
 		signUpFormElement.style.display = "none";
 		signUpBanner.style.display = "block";
 		signInBanner.style.display = "none";
