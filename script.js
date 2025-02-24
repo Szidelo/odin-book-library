@@ -12,7 +12,16 @@ import { createLargeCard } from "./cards.js";
 import { createBookModal } from "./bookModal.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-import { getFirestore, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import {
+	getFirestore,
+	getDoc,
+	doc,
+	setDoc,
+	addDoc,
+	updateDoc,
+	collection,
+	getDocs,
+} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyD5afL-Mohj4kQwRu7mtaMv-o6qs6AQRTY",
@@ -81,14 +90,7 @@ const searchInput = document.querySelector("#search");
 
 // create a constructor for the book (can be converted to a class but for learning i will use function constructor and object prototype)
 function Book(title, author, pages, status, pagesRead, category, cover) {
-	// create a read only id
-	Object.defineProperty(this, "id", {
-		value: crypto.randomUUID(), // Generates a unique ID
-		writable: false, // Makes it read-only
-		enumerable: true, // Allows it to show up in Object.keys()
-		configurable: false, // Prevents deletion or redefinition
-	});
-
+	this.userId = localStorage.getItem("userId") || "no user";
 	this.title = title;
 	this.author = author;
 	this.pages = pages;
@@ -99,8 +101,14 @@ function Book(title, author, pages, status, pagesRead, category, cover) {
 }
 
 // prototypes for Books
-Book.prototype.updateProgress = function (value) {
+Book.prototype.updateProgress = async function (value) {
 	this.pagesRead = value;
+	try {
+		const docRef = doc(db, "users", this.userId, "books", this.id);
+		await updateDoc(docRef, { pagesRead: value });
+	} catch (error) {
+		console.log(error);
+	}
 	return this.pagesRead;
 };
 
@@ -109,9 +117,17 @@ Book.prototype.getPercentRead = function () {
 	return ((this.pagesRead / this.pages) * 100).toFixed(2);
 };
 
-Book.prototype.updateStatus = function (status) {
+Book.prototype.updateStatus = async function (status) {
 	this.status = status;
-	this.status === `${STATUS.FINISHED}` && this.updateProgress(this.pages);
+	console.log(this.id);
+	try {
+		const docRef = doc(db, "users", this.userId, "books", this.id);
+		console.log(docRef);
+		await updateDoc(docRef, { status });
+		console.log(`Updated status for book ${this.id} to ${status}`);
+	} catch (error) {
+		console.error("Error updating status:", error);
+	}
 };
 
 Book.prototype.updateCategory = function (category) {
@@ -125,11 +141,31 @@ Book.prototype.updateCover = function (cover) {
 // create a constructor for library with list of books and methods
 function Library() {
 	this.bookList = [];
+	this.userId = localStorage.getItem("userId") || "no user";
 }
 
 // prototypes for Library
-Library.prototype.getBooks = function () {
-	return this.bookList;
+Library.prototype.getBooks = async function () {
+	try {
+		const booksCollectionRef = collection(db, "users", this.userId, "books");
+		const querySnapshot = await getDocs(booksCollectionRef);
+
+		this.bookList = querySnapshot.docs
+			.map((doc) => {
+				const data = doc.data();
+				return new Book(data.title, data.author, data.pages, data.status, data.pagesRead, data.category, data.cover);
+			})
+			.map((book, index) => {
+				book.id = querySnapshot.docs[index].id; // Assign correct Firestore ID
+				return book;
+			});
+
+		console.log("Books retrieved:", this.bookList);
+		return this.bookList;
+	} catch (error) {
+		console.error("Error getting books:", error);
+		return [];
+	}
 };
 
 Library.prototype.getCategoryOfBooks = function (category) {
@@ -138,14 +174,40 @@ Library.prototype.getCategoryOfBooks = function (category) {
 	});
 };
 
-Library.prototype.addToBook = function (book) {
-	this.bookList.push(book);
+Library.prototype.addToBook = async function (book) {
+	const booksCollectionRef = collection(db, "users", this.userId, "books");
+
+	try {
+		const docRef = await addDoc(booksCollectionRef, {
+			title: book.title || "title not defined",
+			author: book.author || "author not defined",
+			pages: book.pages || "pages not defined",
+			status: book.status || STATUS.QUEUE,
+			pagesRead: book.pagesRead || 0,
+			category: book.category || "category not defined",
+			cover: book.cover || "",
+		});
+
+		book.id = docRef.id;
+		this.bookList.push(book);
+		console.log("Book added:", book);
+	} catch (error) {
+		console.log("Error adding book:", error);
+	}
 };
 
 Library.prototype.removeBook = function (bookToBeRemoved) {
 	const newList = this.bookList.filter((book) => {
 		return book.title !== bookToBeRemoved.title;
 	});
+
+	try {
+		deleteDoc(doc(db, "users", this.userId, "books", bookToBeRemoved.id)).then(() => {
+			console.log("book deleted");
+		});
+	} catch (error) {
+		console.log(error);
+	}
 
 	this.bookList = newList;
 };
@@ -158,15 +220,15 @@ Library.prototype.searchBook = function (keyword) {
 
 const library = new Library();
 
-// mock books
-const theHobbit = new Book("The Hobbit", "J.R.R Tolkien", 256, STATUS.IN_PROGRESS, 206, "fantasy");
-const theShining = new Book("The Shining", "Stephen King", 511, STATUS.QUEUE, 0, "horror");
-const atomicHabits = new Book("Atomic Habits", "James Clear", 489, STATUS.IN_PROGRESS, 100, "personal development");
+// // mock books
+// const theHobbit = new Book("The Hobbit", "J.R.R Tolkien", 256, STATUS.IN_PROGRESS, 206, "fantasy");
+// const theShining = new Book("The Shining", "Stephen King", 511, STATUS.QUEUE, 0, "horror");
+// const atomicHabits = new Book("Atomic Habits", "James Clear", 489, STATUS.IN_PROGRESS, 100, "personal development");
 
-// add mock books to library
-library.addToBook(theHobbit);
-library.addToBook(theShining);
-library.addToBook(atomicHabits);
+// // add mock books to library
+// library.addToBook(theHobbit);
+// library.addToBook(theShining);
+// library.addToBook(atomicHabits);
 
 const displayBooksByStatus = (book, status) => {
 	const { IN_PROGRESS, QUEUE, FINISHED } = STATUS;
@@ -207,7 +269,7 @@ closeFormBtn.addEventListener("click", () => {
 	}, 300);
 });
 
-addForm.addEventListener("submit", (e) => {
+addForm.addEventListener("submit", async (e) => {
 	e.preventDefault();
 
 	const title = e.target.title.value.trim();
@@ -226,7 +288,8 @@ addForm.addEventListener("submit", (e) => {
 	const newBook = new Book(title, author, pages, status, pagesRead, category, cover);
 	library.addToBook(newBook);
 
-	renderBooks(library.getBooks());
+	const books = await library.getBooks();
+	renderBooks(books);
 
 	addForm.reset();
 
@@ -248,7 +311,7 @@ const renderBooks = (books) => {
 	let hasInProgress = false;
 	let hasQueue = false;
 	let hasFinished = false;
-
+	console.log("books", books);
 	books.forEach((book) => {
 		if (book.status === IN_PROGRESS) {
 			displayBooksByStatus(book, IN_PROGRESS);
@@ -267,7 +330,10 @@ const renderBooks = (books) => {
 	finishedList.parentElement.style.display = hasFinished ? "initial" : "none";
 };
 
-renderBooks(library.getBooks());
+(async () => {
+	const books = await library.getBooks();
+	renderBooks(books);
+})();
 
 searchInput.addEventListener("input", (e) => {
 	const keyword = e.target.value;
@@ -275,14 +341,25 @@ searchInput.addEventListener("input", (e) => {
 	renderBooks(filteredBooks);
 });
 
-document.addEventListener("click", (e) => {
+document.addEventListener("click", async (e) => {
 	if (e.target.classList.contains("edit-book-btn")) {
 		const bookId = e.target.dataset.id;
-		const books = library.getBooks();
+		const books = await library.getBooks();
+
+		// Log to debug
+		console.log("Clicked Book ID:", bookId);
+		console.log(
+			"Book List:",
+			books.map((book) => book.id)
+		);
+
 		const selectedBook = books.find((book) => book.id === bookId);
 
 		if (selectedBook) {
 			createBookModal(selectedBook, library, renderBooks);
+			console.log("Selected book:", selectedBook);
+		} else {
+			console.log("No book found with this ID:", bookId);
 		}
 	}
 });

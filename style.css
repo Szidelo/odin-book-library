@@ -531,6 +531,10 @@ select:hover {
 	color: var(--dark-grey);
 }
 
+footer {
+	margin-top: auto;
+}
+
 .footer-container {
 	padding: 2rem;
 	width: 100%;
@@ -746,6 +750,7 @@ select:hover {
 		position: sticky;
 		bottom: 1rem;
 		left: 50%;
+		margin-top: auto;
 		transform: translateX(-50%);
 		line-height: none;
 		display: flex;

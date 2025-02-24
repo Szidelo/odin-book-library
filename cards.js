@@ -3,6 +3,8 @@ export function createLargeCard(book, size) {
 	card.classList.add("card-xl");
 	card.dataset.id = book.id;
 
+	console.log("+++++++++++book card id", book.id);
+
 	if (size === "small") {
 		card.classList.add("variation-small");
 	}
@@ -52,7 +54,12 @@ export function createLargeCard(book, size) {
 
 	const progressFill = document.createElement("div");
 	progressFill.classList.add("progress-bar__fill");
-	progressFill.style.width = `${book.getPercentRead()}%`;
+
+	const getReadPercentage = () => {
+		if (book.pagesRead === 0) return 0;
+		return ((book.pagesRead / book.pages) * 100).toFixed(2);
+	};
+	progressFill.style.width = `${getReadPercentage}%`;
 
 	const progressText = document.createElement("p");
 	progressText.innerHTML = `
@@ -70,6 +77,8 @@ export function createLargeCard(book, size) {
 	editButton.textContent = "Edit Book -->";
 	editButton.classList.add("edit-book-btn");
 	editButton.dataset.id = book.id;
+
+	console.log("card book id", book.id);
 
 	info.appendChild(infoHeader);
 	info.appendChild(progress);

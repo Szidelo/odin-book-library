@@ -75,24 +75,30 @@ export function createBookModal(selectedBook, library, renderBooks) {
 		renderBooks(library.getBooks());
 		closeModalBtn.click();
 	});
-	saveBookBtn.addEventListener("click", () => {
+
+	saveBookBtn.addEventListener("click", async () => {
 		const pagesRead = parseInt(modal.querySelector("#modal-pages-read").value, 10);
 		const status = modal.querySelector("#modal-status").value;
 		const cover = modal.querySelector("#modal-cover").value;
 		const category = modal.querySelector("#modal-category").value;
 
-		selectedBook.updateProgress(pagesRead);
-		selectedBook.updateStatus(status);
-		selectedBook.updateCover(cover);
-		selectedBook.updateCategory(category);
+		try {
+			await selectedBook.updateProgress(pagesRead);
+			await selectedBook.updateStatus(status);
+			// await selectedBook.updateCover(cover);
+			// await selectedBook.updateCategory(category);
 
-		modal.querySelector(".modal-content").classList.remove("show");
-		modal.querySelector(".modal-content").classList.add("hide");
+			modal.querySelector(".modal-content").classList.remove("show");
+			modal.querySelector(".modal-content").classList.add("hide");
 
-		setTimeout(() => {
-			modal.classList.remove("show");
-			modal.remove(); // remove modal after the animation completes
-			renderBooks(library.getBooks());
-		}, 300); // delay removal until animation is finished
+			setTimeout(async () => {
+				modal.classList.remove("show");
+				modal.remove();
+				const books = await library.getBooks();
+				renderBooks(books);
+			}, 300);
+		} catch (error) {
+			console.error("Error updating book:", error);
+		}
 	});
 }
