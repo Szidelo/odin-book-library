@@ -49,10 +49,29 @@ const STATUS = {
 let userName = "";
 let userPhotoURL = "";
 
+// ui
+const inProgressList = document.querySelector("#in-progress");
+const inQueueList = document.querySelector("#in-queue");
+const finishedList = document.querySelector("#finished");
+const addBookBtn = document.querySelector("#add-book");
+const formContainer = document.querySelector(".add-form-container");
+const closeFormBtn = document.createElement("button");
+const addForm = document.querySelector("#add-form");
+const searchInput = document.querySelector("#search");
+const spinner = document.createElement("div");
+const loadingSpinner = document.createElement("div");
+loadingSpinner.classList.add("spinner");
+spinner.classList.add("spinner-container");
+spinner.appendChild(loadingSpinner);
+spinner.id = "loading-spinner";
+const body = document.querySelector("body");
+body.appendChild(spinner);
+
 onAuthStateChanged(auth, (user) => {
 	const loggedInUserId = localStorage.getItem("userId");
 	const userNameElement = document.getElementById("user-name");
 	const userAvatar = document.getElementById("avatar");
+
 	if (loggedInUserId) {
 		console.log(user);
 		const docRef = doc(db, "users", loggedInUserId);
@@ -64,29 +83,20 @@ onAuthStateChanged(auth, (user) => {
 					userPhotoURL = userData.photoURL;
 					userNameElement.textContent = userName;
 					userAvatar.src = userPhotoURL;
+					body.removeChild(spinner);
 					console.log("Document data:", userData);
 				} else {
 					console.log("no document found matching id");
 				}
 			})
 			.catch((error) => {
-				console.log("Error getting document");
+				console.log("Error getting document", error);
 			});
 	} else {
 		console.log("User Id not Found in Local storage");
 		window.location.href = "./auth.html";
 	}
 });
-
-// ui
-const inProgressList = document.querySelector("#in-progress");
-const inQueueList = document.querySelector("#in-queue");
-const finishedList = document.querySelector("#finished");
-const addBookBtn = document.querySelector("#add-book");
-const formContainer = document.querySelector(".add-form-container");
-const closeFormBtn = document.createElement("button");
-const addForm = document.querySelector("#add-form");
-const searchInput = document.querySelector("#search");
 
 // create a constructor for the book (can be converted to a class but for learning i will use function constructor and object prototype)
 function Book(title, author, pages, status, pagesRead, category, cover) {
@@ -144,6 +154,9 @@ function Library() {
 	this.userId = localStorage.getItem("userId") || "no user";
 }
 
+// TODO: create a method to update the list of books so getBooks() returns the updated list without accessing the database
+// TODO: updateList method should be called when a book is added, edited or removed
+
 // prototypes for Library
 Library.prototype.getBooks = async function () {
 	try {
@@ -196,20 +209,14 @@ Library.prototype.addToBook = async function (book) {
 	}
 };
 
-Library.prototype.removeBook = function (bookToBeRemoved) {
-	const newList = this.bookList.filter((book) => {
-		return book.title !== bookToBeRemoved.title;
-	});
-
+Library.prototype.removeBook = async function (bookToBeRemoved) {
 	try {
-		deleteDoc(doc(db, "users", this.userId, "books", bookToBeRemoved.id)).then(() => {
-			console.log("book deleted");
-		});
+		await deleteDoc(doc(db, "users", this.userId, "books", bookToBeRemoved.id));
+		this.bookList = this.bookList.filter((book) => book.id !== bookToBeRemoved.id);
+		console.log("Book deleted:", bookToBeRemoved.title);
 	} catch (error) {
-		console.log(error);
+		console.log("Error deleting book:", error);
 	}
-
-	this.bookList = newList;
 };
 
 Library.prototype.searchBook = function (keyword) {
