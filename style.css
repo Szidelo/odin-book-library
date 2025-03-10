@@ -280,18 +280,22 @@ button {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	overflow-x: hidden;
 }
 
 .card-xl__info .info-header h3 {
 	font-family: var(--text-headers);
 	font-weight: 400;
-	font-size: 1.5rem;
+	font-size: 1.25rem;
+	text-transform: capitalize;
 }
 
 .card-xl__info .info-header p {
 	font-weight: 200;
 	color: var(--dark-grey);
 	letter-spacing: 2px;
+	font-size: 0.75rem;
+	text-transform: capitalize;
 }
 
 .card-xl__info .info-progress {

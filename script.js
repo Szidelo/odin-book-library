@@ -16,7 +16,7 @@ import {
 	getFirestore,
 	getDoc,
 	doc,
-	setDoc,
+	deleteDoc,
 	addDoc,
 	updateDoc,
 	collection,
@@ -73,7 +73,6 @@ onAuthStateChanged(auth, (user) => {
 	const userAvatar = document.getElementById("avatar");
 
 	if (loggedInUserId) {
-		console.log(user);
 		const docRef = doc(db, "users", loggedInUserId);
 		getDoc(docRef)
 			.then((docSnap) => {
@@ -84,7 +83,6 @@ onAuthStateChanged(auth, (user) => {
 					userNameElement.textContent = userName;
 					userAvatar.src = userPhotoURL;
 					body.removeChild(spinner);
-					console.log("Document data:", userData);
 				} else {
 					console.log("no document found matching id");
 				}
@@ -129,12 +127,9 @@ Book.prototype.getPercentRead = function () {
 
 Book.prototype.updateStatus = async function (status) {
 	this.status = status;
-	console.log(this.id);
 	try {
 		const docRef = doc(db, "users", this.userId, "books", this.id);
-		console.log(docRef);
 		await updateDoc(docRef, { status });
-		console.log(`Updated status for book ${this.id} to ${status}`);
 	} catch (error) {
 		console.error("Error updating status:", error);
 	}
@@ -146,6 +141,12 @@ Book.prototype.updateCategory = function (category) {
 
 Book.prototype.updateCover = function (cover) {
 	this.cover = cover;
+	try {
+		const docRef = doc(db, "users", this.userId, "books", this.id);
+		updateDoc(docRef, { cover: cover });
+	} catch (error) {
+		console.error("Error updating cover:", error);
+	}
 };
 
 // create a constructor for library with list of books and methods
@@ -173,7 +174,6 @@ Library.prototype.getBooks = async function () {
 				return book;
 			});
 
-		console.log("Books retrieved:", this.bookList);
 		return this.bookList;
 	} catch (error) {
 		console.error("Error getting books:", error);
@@ -203,7 +203,6 @@ Library.prototype.addToBook = async function (book) {
 
 		book.id = docRef.id;
 		this.bookList.push(book);
-		console.log("Book added:", book);
 	} catch (error) {
 		console.log("Error adding book:", error);
 	}
@@ -213,7 +212,6 @@ Library.prototype.removeBook = async function (bookToBeRemoved) {
 	try {
 		await deleteDoc(doc(db, "users", this.userId, "books", bookToBeRemoved.id));
 		this.bookList = this.bookList.filter((book) => book.id !== bookToBeRemoved.id);
-		console.log("Book deleted:", bookToBeRemoved.title);
 	} catch (error) {
 		console.log("Error deleting book:", error);
 	}
@@ -226,16 +224,6 @@ Library.prototype.searchBook = function (keyword) {
 };
 
 const library = new Library();
-
-// // mock books
-// const theHobbit = new Book("The Hobbit", "J.R.R Tolkien", 256, STATUS.IN_PROGRESS, 206, "fantasy");
-// const theShining = new Book("The Shining", "Stephen King", 511, STATUS.QUEUE, 0, "horror");
-// const atomicHabits = new Book("Atomic Habits", "James Clear", 489, STATUS.IN_PROGRESS, 100, "personal development");
-
-// // add mock books to library
-// library.addToBook(theHobbit);
-// library.addToBook(theShining);
-// library.addToBook(atomicHabits);
 
 const displayBooksByStatus = (book, status) => {
 	const { IN_PROGRESS, QUEUE, FINISHED } = STATUS;
@@ -318,7 +306,6 @@ const renderBooks = (books) => {
 	let hasInProgress = false;
 	let hasQueue = false;
 	let hasFinished = false;
-	console.log("books", books);
 	books.forEach((book) => {
 		if (book.status === IN_PROGRESS) {
 			displayBooksByStatus(book, IN_PROGRESS);
@@ -353,18 +340,10 @@ document.addEventListener("click", async (e) => {
 		const bookId = e.target.dataset.id;
 		const books = await library.getBooks();
 
-		// Log to debug
-		console.log("Clicked Book ID:", bookId);
-		console.log(
-			"Book List:",
-			books.map((book) => book.id)
-		);
-
 		const selectedBook = books.find((book) => book.id === bookId);
 
 		if (selectedBook) {
 			createBookModal(selectedBook, library, renderBooks);
-			console.log("Selected book:", selectedBook);
 		} else {
 			console.log("No book found with this ID:", bookId);
 		}

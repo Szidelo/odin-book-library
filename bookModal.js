@@ -29,7 +29,9 @@ export function createBookModal(selectedBook, library, renderBooks) {
             </div>
             <div>
                 <label for="modal-pages-read">Pages Read:</label>
-                <input type="number" id="modal-pages-read" value="${selectedBook.pagesRead}" min="0" max="${selectedBook.pages}" />
+                <input type="number" id="modal-pages-read" value="${selectedBook.pagesRead}" min="0" max="${selectedBook.pages}" max="${
+		selectedBook.pages
+	}" />
             </div>
             <div>
                 <label for="modal-status">Status:</label>
@@ -70,9 +72,10 @@ export function createBookModal(selectedBook, library, renderBooks) {
 
 	const saveBookBtn = modal.querySelector("#save-book");
 	const removeBookBtn = modal.querySelector("#remove-book");
-	removeBookBtn.addEventListener("click", () => {
-		library.removeBook(selectedBook);
-		renderBooks(library.getBooks());
+	removeBookBtn.addEventListener("click", async () => {
+		await library.removeBook(selectedBook);
+		const books = await library.getBooks();
+		renderBooks(books);
 		closeModalBtn.click();
 	});
 
@@ -85,8 +88,8 @@ export function createBookModal(selectedBook, library, renderBooks) {
 		try {
 			await selectedBook.updateProgress(pagesRead);
 			await selectedBook.updateStatus(status);
-			// await selectedBook.updateCover(cover);
-			// await selectedBook.updateCategory(category);
+			await selectedBook.updateCover(cover);
+			await selectedBook.updateCategory(category);
 
 			modal.querySelector(".modal-content").classList.remove("show");
 			modal.querySelector(".modal-content").classList.add("hide");

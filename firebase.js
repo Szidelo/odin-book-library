@@ -5,7 +5,8 @@ import {
 	signInWithEmailAndPassword,
 	signOut,
 } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { getFirestore, setDoc, doc, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import mockBooks from "./mockBooks.js";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyD5afL-Mohj4kQwRu7mtaMv-o6qs6AQRTY",
@@ -37,14 +38,12 @@ if (window.location.pathname === "/auth.html") {
 	const signInBanner = document.querySelector(".auth-banner__signin");
 
 	signUpButton.addEventListener("click", function () {
-		console.log("clicked sign up");
 		signInFormElement.style.display = "none";
 		signUpFormElement.style.display = "flex";
 		signUpBanner.style.display = "none";
 		signInBanner.style.display = "block";
 	});
 	signInButton.addEventListener("click", function () {
-		console.log("clicked sign in");
 		signInFormElement.style.display = "flex";
 		signUpFormElement.style.display = "none";
 		signUpBanner.style.display = "block";
@@ -56,17 +55,26 @@ if (window.location.pathname === "/auth.html") {
 		try {
 			const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 			const user = userCredential.user;
+
 			const userData = {
 				email,
 				firstName,
 				lastName,
 				photoURL,
 			};
-			const docRef = doc(db, "users", user.uid);
 
+			// Store user info in Firestore
+			const docRef = doc(db, "users", user.uid);
 			await setDoc(docRef, userData);
-			console.log("user data:", userData);
-			console.log("User signed up:", user);
+
+			// Correct Firestore reference for books subcollection
+			const booksCollectionRef = collection(db, "users", user.uid, "books");
+
+			// Add mock books to the user's collection
+			for (const book of mockBooks) {
+				await addDoc(booksCollectionRef, book);
+			}
+
 			localStorage.setItem("userId", user.uid);
 			isAuthenticated = true;
 			window.location.href = "./index.html";
@@ -80,7 +88,6 @@ if (window.location.pathname === "/auth.html") {
 		try {
 			const userCredential = await signInWithEmailAndPassword(auth, email, password);
 			const user = userCredential.user;
-			console.log("User signed in:", user);
 			localStorage.setItem("userId", user.uid);
 			isAuthenticated = true;
 			window.location.href = "./index.html";
@@ -91,7 +98,6 @@ if (window.location.pathname === "/auth.html") {
 
 	signInForm.addEventListener("submit", (e) => {
 		e.preventDefault();
-		console.log(e.target);
 
 		const email = e.target.email.value;
 		const password = e.target.password.value;
@@ -102,12 +108,10 @@ if (window.location.pathname === "/auth.html") {
 		};
 
 		handleSignIn(data);
-		console.log("user:", data);
 	});
 
 	signUpForm.addEventListener("submit", (e) => {
 		e.preventDefault();
-		console.log(e.target);
 
 		const firstName = e.target.fName.value;
 		const lastName = e.target.lName.value;
@@ -124,7 +128,6 @@ if (window.location.pathname === "/auth.html") {
 		};
 
 		handleSignUp(data);
-		console.log("user:", data);
 	});
 }
 
