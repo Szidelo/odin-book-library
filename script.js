@@ -79,7 +79,7 @@ onAuthStateChanged(auth, (user) => {
 				if (docSnap.exists()) {
 					const userData = docSnap.data();
 					userName = userData.lastName;
-					userPhotoURL = userData.photoURL;
+					userPhotoURL = userData.photoURL || "./assets/profile-fallback.jpg";
 					userNameElement.textContent = userName;
 					userAvatar.src = userPhotoURL;
 					body.removeChild(spinner);

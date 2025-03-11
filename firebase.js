@@ -3,6 +3,7 @@ import {
 	getAuth,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
+	sendPasswordResetEmail,
 	signOut,
 } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 import { getFirestore, setDoc, doc, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
@@ -36,6 +37,7 @@ if (window.location.pathname === "/auth.html") {
 	const signUpFormElement = document.getElementById("signup");
 	const signUpBanner = document.querySelector(".auth-banner__signup");
 	const signInBanner = document.querySelector(".auth-banner__signin");
+	const recover = document.getElementById("recover");
 
 	signUpButton.addEventListener("click", function () {
 		signInFormElement.style.display = "none";
@@ -95,6 +97,27 @@ if (window.location.pathname === "/auth.html") {
 			console.error("Error signing in:", error);
 		}
 	};
+
+	const handleRecover = async (email) => {
+		const message = document.createElement("p");
+		message.style.color = "green";
+		try {
+			await sendPasswordResetEmail(auth, email);
+			console.log("Password reset email sent successfully to", email);
+			message.textContent = "Password reset email sent successfully to " + email + ". Please check your inbox.";
+			signInForm.appendChild(message);
+		} catch (error) {
+			console.error("Error sending password reset email:", error);
+			message.textContent = "Error sending password reset email: " + error.message;
+			signInForm.appendChild(message);
+		}
+	};
+
+	recover.addEventListener("click", (e) => {
+		e.preventDefault();
+		const email = document.getElementById("email").value;
+		handleRecover(email);
+	});
 
 	signInForm.addEventListener("submit", (e) => {
 		e.preventDefault();
